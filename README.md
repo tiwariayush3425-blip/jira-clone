@@ -4,11 +4,11 @@ A modern Jira-inspired project management application built using **React**, **V
 
 ## 🌐 Live Demo
 
-https://tiwariayush3425-blip.github.io/jeera-clone/
+https://tiwariayush3425-blip.github.io/jira-clone/
 
 ## 📂 GitHub Repository
 
-https://github.com/tiwariayush3425-blip/jeera-clone
+https://github.com/tiwariayush3425-blip/jira-clone
 
 ---
 
