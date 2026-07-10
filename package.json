@@ -2,16 +2,16 @@
   "name": "jeera-clone",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://tiwariayush3425-blip.github.io/jeera-clone",
+  "homepage": "https://tiwariayush3425-blip.github.io/jira-clone/",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "lint": "eslint .",
-  "preview": "vite preview",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
-},
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

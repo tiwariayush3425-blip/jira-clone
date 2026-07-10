@@ -10,7 +10,7 @@ import Dashboard from "../pages/Dashboard";
 
 function AppRoutes() {
   return (
-   <BrowserRouter basename="/jeera-clone">
+   <BrowserRouter basename="/jira-clone">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
