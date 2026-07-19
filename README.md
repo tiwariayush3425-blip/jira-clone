@@ -1,98 +1,138 @@
-# 🚀 Jira Clone
+# Jira Clone - Project Management System
 
-A modern Jira-inspired project management application built using **React**, **Vite**, **TypeScript**, and **Material UI**.
+A Jira-inspired project management application built using React, TypeScript, Vite, and Material UI. The project demonstrates component-based architecture, responsive UI design, state management, and modern frontend development practices.
 
-## 🌐 Live Demo
+## 🚀 Live Demo
 
-https://tiwariayush3425-blip.github.io/jira-clone/
+Add your GitHub Pages URL here:
 
-## 📂 GitHub Repository
+```
+Your Live URL
+```
 
-https://github.com/tiwariayush3425-blip/jira-clone
+## 📌 Features
 
----
+* Kanban board with Todo, In Progress, and Done columns
+* Drag and Drop task management
+* Create new tasks
+* Edit existing tasks
+* Delete tasks
+* Search tasks
+* Filter tasks by priority
+* LocalStorage based data persistence
+* Responsive dashboard layout
+* Reusable React components
+* Client-side routing
+* Protected routes
+* Toast notifications for user actions
 
-## ✨ Features
+## 🛠 Tech Stack
 
-- 🔐 Login Page
-- 🔑 Forgot Password Page
-- 📊 Dashboard
-- 📋 Kanban Board
-- 📌 Task Management UI
-- 📁 Projects Page
-- 👥 Team Page
-- 👤 Profile Page
-- ⚙️ Settings Page
-- 🚧 Custom 404 Page
-- 🌙 Dark Theme Support
-- 📱 Responsive Design
-- ♻️ Reusable Components
+### Frontend
 
----
+* React
+* TypeScript
+* Vite
+* Material UI (MUI)
 
-## 🛠️ Tech Stack
+### Libraries
 
-- React
-- Vite
-- TypeScript
-- Material UI (MUI)
-- React Router DOM
+* React Router DOM
+* Zustand
+* React Hot Toast
+* @hello-pangea/dnd
 
----
+## 📂 Project Structure
 
-## 📁 Project Structure
-
-```text
-src/
-├── components/
-├── context/
-├── data/
-├── layouts/
-├── pages/
-├── routes/
-├── theme/
-├── types/
-├── App.tsx
+```
+src
+│
+├── api
+├── components
+│   ├── Navbar
+│   ├── Sidebar
+│   ├── TaskCard
+│   ├── BoardColumn
+│   └── CustomDialog
+│
+├── data
+├── layouts
+├── pages
+├── routes
+├── services
+├── store
+├── types
 └── main.tsx
 ```
 
----
+## ⚙️ Installation & Setup
 
-## ⚙️ Installation
+Clone the repository:
 
 ```bash
-git clone https://github.com/tiwariayush3425-blip/jeera-clone.git
+git clone your-repository-link
+```
+
+Go to project directory:
+
+```bash
 cd jeera-clone
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
+
+Run development server:
+
+```bash
 npm run dev
 ```
 
----
-
-## 📦 Build
+Create production build:
 
 ```bash
 npm run build
 ```
 
----
-
-## 🚀 Deploy
+Deploy to GitHub Pages:
 
 ```bash
 npm run deploy
 ```
 
----
+## 🎯 Application Workflow
+
+1. User opens the application
+2. Login page is displayed
+3. User enters login details
+4. Dashboard opens with Kanban board
+5. Tasks can be created, updated, deleted, searched, filtered, and moved using drag and drop
+
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](src/assets/screenshots/dashboard.png)
+
+### Add Task Dialog
+![Add Task](src/assets/screenshots/add-task.png)
+
+### Drag and Drop
+![Drag Drop](src/assets/screenshots/drag-drop.png)
+
+## 📈 Learning Outcomes
+
+* React component architecture
+* TypeScript with React
+* Material UI implementation
+* State management
+* Routing
+* Reusable components
+* Frontend project organization
+* Git and GitHub workflow
 
 ## 👨‍💻 Author
 
-**Ayush Tiwari**
-
-GitHub: https://github.com/tiwariayush3425-blip
-
----
-
-## 📄 License
-
-This project was developed for learning and internship purposes.
+Ayush Tiwari
