@@ -114,7 +114,7 @@ npm run deploy
 ## 📸 Screenshots
 
 ### Dashboard
-![dashboard](src/assets/screenshots/dashboard.png)
+![Dashboard](./src/assets/screenshots/dashboard.png)
 
 ### Add Task Dialog
 ![add task](src/assets/screenshots/add-task.png)
