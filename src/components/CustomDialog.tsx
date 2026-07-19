@@ -2,42 +2,128 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  TextField,
   DialogActions,
   Button,
-  Typography,
+  MenuItem,
 } from "@mui/material";
 
-type CustomDialogProps = {
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  taskSchema,
+  type TaskFormData,
+} from "../schemas/taskSchema";
+
+import type { Task } from "../types/task";
+
+type Props = {
   open: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
+  handleClose: () => void;
+  addTask: (newTask: Task) => void;
+  selectedTask: Task | null;
+updateTask: (updatedTask: Task) => void;
 };
 
 function CustomDialog({
   open,
-  onClose,
-  title,
-  message,
-}: CustomDialogProps) {
+  handleClose,
+  addTask,
+  selectedTask,
+  updateTask,
+}: Props) {
+  const {
+    register,
+    handleSubmit,
+    
+    formState: { errors },
+  } = useForm<TaskFormData>({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      priority: "Medium",
+      assignee: "",
+    },
+  });
+
+  const onSubmit = (data: TaskFormData) => {
+  if (selectedTask) {
+    updateTask({
+      ...selectedTask,
+      ...data,
+    });
+  } else {
+    addTask({
+      id: Date.now(),
+      ...data,
+      status: "Todo",
+    });
+  }
+
+  handleClose();
+};
+
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogTitle>Add New Task</DialogTitle>
 
-      <DialogContent>
-        <Typography>{message}</Typography>
-      </DialogContent>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Title"
+            fullWidth
+            {...register("title")}
+            error={!!errors.title}
+            helperText={errors.title?.message}
+          />
 
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+          <TextField
+            margin="dense"
+            label="Description"
+            fullWidth
+            multiline
+            rows={3}
+            {...register("description")}
+            error={!!errors.description}
+            helperText={errors.description?.message}
+          />
 
-        <Button
-          variant="contained"
-          onClick={onClose}
-        >
-          OK
-        </Button>
-      </DialogActions>
+          <TextField
+            select
+            margin="dense"
+            label="Priority"
+            fullWidth
+            defaultValue="Medium"
+            {...register("priority")}
+            error={!!errors.priority}
+            helperText={errors.priority?.message}
+          >
+            <MenuItem value="High">High</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="Low">Low</MenuItem>
+          </TextField>
+
+          <TextField
+            margin="dense"
+            label="Assignee"
+            fullWidth
+            {...register("assignee")}
+            error={!!errors.assignee}
+            helperText={errors.assignee?.message}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+
+          <Button type="submit" variant="contained">
+            {selectedTask ? "Update Task" : "Add Task"}
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

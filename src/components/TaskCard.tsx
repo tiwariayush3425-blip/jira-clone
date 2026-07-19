@@ -6,48 +6,69 @@ import {
   Chip,
   Avatar,
   Box,
+  IconButton,
 } from "@mui/material";
 
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Draggable } from "@hello-pangea/dnd";
+
 type TaskCardProps = {
+  id: number;
+  index: number;
   title: string;
   description: string;
   priority: string;
   assignee: string;
+  deleteTask: (id: number) => void;
+  editTask: (id: number) => void;
 };
 
 function TaskCard({
+  id,
+  index,
   title,
   description,
   priority,
   assignee,
+  deleteTask,
+  editTask,
 }: TaskCardProps) {
   return (
-    <Card
-  sx={{
-    mb: 2,
-    borderRadius: 3,
-    boxShadow: 2,
-    transition: "0.3s",
-    cursor: "pointer",
-    "&:hover": {
-      transform: "translateY(-4px)",
-      boxShadow: 6,
-    },
-  }}
->
+  <Draggable
+    draggableId={String(id)}
+    index={index}
+  >
+
+    {(provided) => (
+
+      <Card
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+
+        sx={{
+          mb: 2,
+          borderRadius: 3,
+          boxShadow: 2,
+          transition: "0.3s",
+          cursor: "grab",
+
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: 6,
+          },
+        }}
+      >
       <CardContent>
-        <Typography
-  variant="h6"
-  sx={{ fontWeight: "bold" }}
->
-          {title}
-        </Typography>
+        
 
         <Typography
           variant="body2"
           color="text.secondary"
           sx={{ my: 1, minHeight:45, }}
         >
+          {title}
           {description}
         </Typography>
 
@@ -63,25 +84,43 @@ function TaskCard({
   }
 />
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            mt: 2,
-            gap: 1,
-          }}
-        >
-          <Avatar sx={{ width: 30, height: 30 }}>
-            {assignee.charAt(0)}
-          </Avatar>
+       <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mt: 2,
+  }}
+>
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Avatar sx={{ width: 30, height: 30 }}>
+      {String(assignee).charAt(0)}
+    </Avatar>
 
-          <Typography variant="body2">
-            {assignee}
-          </Typography>
-        </Box>
+    <Typography variant="body2">
+      {assignee}
+    </Typography>
+  </Box>
+  <IconButton
+  color="primary"
+  onClick={() => editTask(id)}
+>
+  <EditIcon />
+</IconButton>
+  <IconButton
+    color="error"
+    onClick={() => deleteTask(id)}
+  >
+    <DeleteIcon />
+  </IconButton>
+</Box>
       </CardContent>
-    </Card>
-  );
+        </Card>
+
+    )}
+
+  </Draggable>
+);
 }
 
 export default TaskCard;
