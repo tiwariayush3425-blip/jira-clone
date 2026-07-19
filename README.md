@@ -114,13 +114,13 @@ npm run deploy
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](src/assets/screenshots/dashboard.png)
+![dashboard](src/assets/screenshots/dashboard.png)
 
 ### Add Task Dialog
-![Add Task](src/assets/screenshots/add-task.png)
+![add task](src/assets/screenshots/add-task.png)
 
 ### Drag and Drop
-![Drag Drop](src/assets/screenshots/drag-drop.png)
+![drag drop](src/assets/screenshots/drag-drop.png)
 
 ## 📈 Learning Outcomes
 
