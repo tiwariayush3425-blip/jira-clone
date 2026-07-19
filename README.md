@@ -70,7 +70,7 @@ src
 Clone the repository:
 
 ```bash
-git clone your-repository-link
+git clone https://github.com/tiwariayush3425-blip/jira-clone.git
 ```
 
 Go to project directory:
