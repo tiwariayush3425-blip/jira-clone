@@ -8,8 +8,33 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useAuthStore } from "../../store/authStore";
+
+
 function Login() {
- const navigate = useNavigate();
+
+  const navigate = useNavigate();
+
+  const login = useAuthStore(
+    (state) => state.login
+  );
+
+
+  const handleLogin = () => {
+
+    login(
+      {
+        id: 1,
+        name: "Ayush",
+        email: "ayush@gmail.com",
+      },
+      "demo-token"
+    );
+
+    navigate("/dashboard");
+  };
+
+
   return (
     <Box
       sx={{
@@ -20,6 +45,7 @@ function Login() {
         bgcolor: "#f5f5f5",
       }}
     >
+
       <Paper
         elevation={3}
         sx={{
@@ -28,6 +54,7 @@ function Login() {
           borderRadius: 3,
         }}
       >
+
         <Typography
           variant="h4"
           fontWeight="bold"
@@ -37,11 +64,13 @@ function Login() {
           Jira Clone
         </Typography>
 
+
         <TextField
           label="Email"
           fullWidth
           margin="normal"
         />
+
 
         <TextField
           label="Password"
@@ -50,34 +79,46 @@ function Login() {
           margin="normal"
         />
 
+
         <Button
-  variant="contained"
-  fullWidth
-  sx={{ mt: 3, py: 1.5 }}
-  onClick={() => navigate("/dashboard")}
->
-  Login
-</Button>
+          variant="contained"
+          fullWidth
+          sx={{
+            mt: 3,
+            py: 1.5,
+          }}
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+
+
         <Typography
-  sx={{
-    mt: 2,
-    textAlign: "center",
-  }}
->
-  <Link
-    to="/forgot-password"
-    style={{
-      textDecoration: "none",
-      color: "#1976d2",
-      fontWeight: "bold",
-    }}
-  >
-    Forgot Password?
-  </Link>
-</Typography>
+          sx={{
+            mt: 2,
+            textAlign: "center",
+          }}
+        >
+
+          <Link
+            to="/forgot-password"
+            style={{
+              textDecoration: "none",
+              color: "#1976d2",
+              fontWeight: "bold",
+            }}
+          >
+            Forgot Password?
+          </Link>
+
+        </Typography>
+
+
       </Paper>
+
     </Box>
   );
 }
+
 
 export default Login;
