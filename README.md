@@ -7,7 +7,7 @@ A Jira-inspired project management application built using React, TypeScript, Vi
 Add your GitHub Pages URL here:
 
 ```
-https://github.com/tiwariayush3425-blip/jira-clone
+https://tiwariayush3425-blip.github.io/jira-clone/
 ```
 
 ## 📌 Features
