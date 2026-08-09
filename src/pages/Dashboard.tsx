@@ -7,15 +7,15 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Header from "../components/Header";
 import BoardColumn from "../components/BoardColumn";
+import AnalyticsCard from "../components/AnalyticsCard";
+import TaskStatusChart from "../components/TaskStatusChart";
 
 import { tasks as initialTasks } from "../data/tasks";
 import type { Task } from "../types/task";
 
 function Dashboard() {
-
   const [tasks, setTasks] = useState<Task[]>(() => {
     const savedTasks = localStorage.getItem("tasks");
-
     return savedTasks ? JSON.parse(savedTasks) : initialTasks;
   });
 
@@ -25,13 +25,10 @@ function Dashboard() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [open, setOpen] = useState(false);
 
-
   const addTask = (newTask: Task) => {
     setTasks((prev) => [...prev, newTask]);
-
     toast.success("Task added successfully!");
   };
-
 
   const deleteTask = (id: number) => {
     setTasks((prev) =>
@@ -42,6 +39,34 @@ function Dashboard() {
   };
 
 
+  const addComment = (
+  taskId: number,
+  comment: string
+) => {
+  setTasks((prev) =>
+    prev.map((task) =>
+      task.id === taskId
+        ? {
+            ...task,
+            comments: [
+              ...(task.comments || []),
+              {
+                id: Date.now(),
+                text: comment,
+                author: "Ayush",
+                createdAt: new Date().toLocaleString(),
+              },
+            ],
+          }
+        : task
+    )
+  );
+
+  toast.success("Comment added!");
+};
+
+
+
   useEffect(() => {
     localStorage.setItem(
       "tasks",
@@ -49,9 +74,7 @@ function Dashboard() {
     );
   }, [tasks]);
 
-
   const handleEdit = (id: number) => {
-
     const task = tasks.find(
       (task) => task.id === id
     );
@@ -62,9 +85,7 @@ function Dashboard() {
     }
   };
 
-
   const updateTask = (updatedTask: Task) => {
-
     setTasks((prev) =>
       prev.map((task) =>
         task.id === updatedTask.id
@@ -73,27 +94,16 @@ function Dashboard() {
       )
     );
 
-
     toast.success("Task updated successfully!");
 
     setOpen(false);
     setSelectedTask(null);
   };
 
-
-  // Drag & Drop Function
-
   const handleDragEnd = (result: DropResult) => {
+    const { destination, draggableId } = result;
 
-    const {
-      destination,
-      draggableId
-    } = result;
-
-
-    // agar drop nahi hua
     if (!destination) return;
-
 
     setTasks((prev) =>
       prev.map((task) =>
@@ -107,93 +117,136 @@ function Dashboard() {
       )
     );
 
-
     toast.success("Task moved successfully!");
   };
 
+  // ===========================
+  // Analytics
+  // ===========================
 
+  const todoCount = tasks.filter(
+    (task) => task.status === "Todo"
+  ).length;
+
+  const progressCount = tasks.filter(
+    (task) => task.status === "In Progress"
+  ).length;
+
+  const doneCount = tasks.filter(
+    (task) => task.status === "Done"
+  ).length;
+
+  const chartData = [
+    {
+      name: "Todo",
+      value: todoCount,
+    },
+    {
+      name: "In Progress",
+      value: progressCount,
+    },
+    {
+      name: "Done",
+      value: doneCount,
+    },
+  ];
+
+  // ===========================
+  // Search + Filter
+  // ===========================
 
   const filteredTasks = tasks.filter((task) => {
-
     const matchesSearch =
       task.title
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-
       task.description
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-
 
     const matchesPriority =
       priorityFilter === "All" ||
       task.priority === priorityFilter;
 
-
     return matchesSearch && matchesPriority;
-
   });
 
-
-
   return (
-
     <DashboardLayout>
-
-      <DragDropContext
-        onDragEnd={handleDragEnd}
-      >
-
-
+      <DragDropContext onDragEnd={handleDragEnd}>
         <Header
           addTask={addTask}
           updateTask={updateTask}
-
           open={open}
           setOpen={setOpen}
-
           selectedTask={selectedTask}
           setSelectedTask={setSelectedTask}
-
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-
           priorityFilter={priorityFilter}
           setPriorityFilter={setPriorityFilter}
         />
 
+        {/* Analytics Cards */}
 
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2,1fr)",
+              lg: "repeat(4,1fr)",
+            },
+            gap: 2,
+            p: 2,
+          }}
+        >
+          <AnalyticsCard
+            title="Total Tasks"
+            value={tasks.length}
+          />
+
+          <AnalyticsCard
+            title="Todo"
+            value={todoCount}
+          />
+
+          <AnalyticsCard
+            title="In Progress"
+            value={progressCount}
+          />
+
+          <AnalyticsCard
+            title="Completed"
+            value={doneCount}
+          />
+        </Box>
+
+        {/* Kanban Board */}
 
         <Box
           sx={{
             display: "flex",
-
             gap: {
               xs: 2,
               md: 3,
             },
-
             p: {
               xs: 2,
               md: 3,
             },
-
             overflowX: "auto",
-
             alignItems: "flex-start",
           }}
         >
-
-
           <BoardColumn
-            title="Todo"
-            status="Todo"
-            tasks={filteredTasks}
-            deleteTask={deleteTask}
-            editTask={handleEdit}
+          title="Todo"
+          status="Todo"
+          tasks={filteredTasks}
+          deleteTask={deleteTask}
+          editTask={handleEdit}
+          addComment={addComment}
           />
-
-
 
           <BoardColumn
             title="In Progress"
@@ -201,9 +254,8 @@ function Dashboard() {
             tasks={filteredTasks}
             deleteTask={deleteTask}
             editTask={handleEdit}
+            addComment={addComment}
           />
-
-
 
           <BoardColumn
             title="Done"
@@ -211,19 +263,25 @@ function Dashboard() {
             tasks={filteredTasks}
             deleteTask={deleteTask}
             editTask={handleEdit}
+            addComment={addComment}
           />
-
-
         </Box>
 
+        {/* Chart */}
 
+        <Box
+          sx={{
+            p: 2,
+            bgcolor: "#fff",
+            borderRadius: 2,
+            m: 2,
+          }}
+        >
+          <TaskStatusChart data={chartData} />
+        </Box>
       </DragDropContext>
-
-
     </DashboardLayout>
-
   );
 }
-
 
 export default Dashboard;

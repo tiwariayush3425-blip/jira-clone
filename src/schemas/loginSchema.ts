@@ -8,6 +8,12 @@ export const loginSchema = z.object({
   password: z
     .string()
     .min(6, "Minimum 6 characters"),
+
+  role: z.enum([
+    "admin",
+    "manager",
+    "member",
+  ]),
 });
 
 export type LoginFormData =

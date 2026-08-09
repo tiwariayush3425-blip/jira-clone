@@ -7,12 +7,32 @@ import {
   Avatar,
   IconButton,
   InputAdornment,
+  Badge,
+  Menu,
+  MenuItem,
+  ListItemText,
 } from "@mui/material";
 
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
 
 function Navbar() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+const notifications = [
+  "Task 'UI Design' assigned to you",
+  "Project deadline is tomorrow",
+  "Task moved to Done",
+];
+
+const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleClose = () => {
+  setAnchorEl(null);
+};
   return (
     <AppBar
       position="sticky"
@@ -69,14 +89,35 @@ function Navbar() {
           }}
         />
 
-        <IconButton
-         color="inherit"
-         sx={{
-         p: 1,
-         }}
-         >
-          <NotificationsIcon />
-        </IconButton>
+        <>
+  <IconButton
+    color="inherit"
+    sx={{ p: 1 }}
+    onClick={handleOpen}
+  >
+    <Badge
+      badgeContent={notifications.length}
+      color="error"
+    >
+      <NotificationsIcon />
+    </Badge>
+  </IconButton>
+
+  <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl)}
+    onClose={handleClose}
+  >
+    {notifications.map((notification, index) => (
+      <MenuItem
+        key={index}
+        onClick={handleClose}
+      >
+        <ListItemText primary={notification} />
+      </MenuItem>
+    ))}
+  </Menu>
+</>
 
         <Avatar
   sx={{

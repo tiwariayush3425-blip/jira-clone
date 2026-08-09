@@ -1,9 +1,12 @@
 import { create } from "zustand";
 
-interface User {
+export type UserRole = "admin" | "manager" | "member";
+
+export interface User {
   id: number;
   name: string;
   email: string;
+  role: "admin" | "manager" | "member";
 }
 
 interface AuthState {

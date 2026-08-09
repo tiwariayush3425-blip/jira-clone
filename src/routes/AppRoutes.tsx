@@ -48,23 +48,23 @@ function AppRoutes() {
 
 
         <Route
-          path="/projects"
-          element={
-            <ProtectedRoute>
-              <Projects />
-            </ProtectedRoute>
-          }
-        />
+  path="/projects"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "manager"]}>
+      <Projects />
+    </ProtectedRoute>
+  }
+/>
 
 
         <Route
-          path="/team"
-          element={
-            <ProtectedRoute>
-              <Team />
-            </ProtectedRoute>
-          }
-        />
+  path="/team"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "manager"]}>
+      <Team />
+    </ProtectedRoute>
+  }
+/>
 
 
         <Route
@@ -78,13 +78,13 @@ function AppRoutes() {
 
 
         <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
+  path="/settings"
+  element={
+    <ProtectedRoute allowedRoles={["admin"]}>
+      <Settings />
+    </ProtectedRoute>
+  }
+/>
 
 
         <Route

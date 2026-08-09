@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
+import { useAuthStore } from "../store/authStore";
 import {
   Box,
   List,
@@ -44,6 +45,7 @@ const menuItems = [
 
 function Sidebar() {
   const location = useLocation();
+  const user = useAuthStore((state) => state.user);
   return (
     <Box
       sx={{

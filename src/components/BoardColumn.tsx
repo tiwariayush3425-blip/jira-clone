@@ -85,26 +85,17 @@ function BoardColumn({
             {filteredTasks.map((task, index) => (
 
               <TaskCard
-
-                key={task.id}
-
-                id={task.id}
-
-                index={index}
-
-                title={task.title}
-
-                description={task.description}
-
-                priority={task.priority}
-
-                assignee={task.assignee}
-
-                deleteTask={deleteTask}
-
-                editTask={editTask}
-
-              />
+            key={task.id}
+            id={task.id}
+            index={index}
+            title={task.title}
+            description={task.description}
+            priority={task.priority}
+            assignee={task.assignee}
+            comments={task.comments}
+            deleteTask={deleteTask}
+            editTask={editTask}
+            />
 
             ))}
 

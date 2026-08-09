@@ -12,6 +12,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Draggable } from "@hello-pangea/dnd";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 type TaskCardProps = {
   id: number;
@@ -20,6 +21,13 @@ type TaskCardProps = {
   description: string;
   priority: string;
   assignee: string;
+  comments?: {
+    id: number;
+    text: string;
+    author: string;
+    createdAt: string;
+  }[];
+
   deleteTask: (id: number) => void;
   editTask: (id: number) => void;
 };
@@ -31,6 +39,7 @@ function TaskCard({
   description,
   priority,
   assignee,
+  comments = [],
   deleteTask,
   editTask,
 }: TaskCardProps) {
