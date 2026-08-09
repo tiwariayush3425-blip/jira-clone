@@ -11,6 +11,8 @@ type BoardColumnProps = {
   tasks: Task[];
   deleteTask: (id: number) => void;
   editTask: (id: number) => void;
+  addComment: (taskId: number, comment: string) => void;
+  onView: (id: number) => void;
 };
 
 
@@ -20,6 +22,8 @@ function BoardColumn({
   tasks,
   deleteTask,
   editTask,
+  addComment,
+  onView,
 }: BoardColumnProps) {
 
 
@@ -95,6 +99,8 @@ function BoardColumn({
             comments={task.comments}
             deleteTask={deleteTask}
             editTask={editTask}
+            addComment={addComment}
+            onView={onView}
             />
 
             ))}

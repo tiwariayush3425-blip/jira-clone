@@ -1,32 +1,27 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import NotFound from "../pages/NotFound";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import Team from "../pages/Team";
 import Projects from "../pages/Projects";
+import Dashboard from "../pages/Dashboard";
+import Login from "../pages/auth/Login";
+
 import ProtectedRoute from "./ProtectedRoute";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Login from "../pages/auth/Login";
-import Dashboard from "../pages/Dashboard";
-
-
 function AppRoutes() {
-
   return (
-
     <BrowserRouter basename="/jira-clone">
-
       <Routes>
 
-        {/* Login public route */}
+        {/* Login */}
         <Route
           path="/login"
           element={<Login />}
         />
 
-
-        {/* Protected Dashboard */}
+        {/* Dashboard */}
         <Route
           path="/"
           element={
@@ -35,7 +30,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
 
         <Route
           path="/dashboard"
@@ -46,27 +40,31 @@ function AppRoutes() {
           }
         />
 
-
+        {/* Projects */}
         <Route
-  path="/projects"
-  element={
-    <ProtectedRoute allowedRoles={["admin", "manager"]}>
-      <Projects />
-    </ProtectedRoute>
-  }
-/>
+          path="/projects"
+          element={
+            <ProtectedRoute
+              allowedRoles={["admin", "manager"]}
+            >
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
 
-
+        {/* Team */}
         <Route
-  path="/team"
-  element={
-    <ProtectedRoute allowedRoles={["admin", "manager"]}>
-      <Team />
-    </ProtectedRoute>
-  }
-/>
+          path="/team"
+          element={
+            <ProtectedRoute
+              allowedRoles={["admin", "manager"]}
+            >
+              <Team />
+            </ProtectedRoute>
+          }
+        />
 
-
+        {/* Profile */}
         <Route
           path="/profile"
           element={
@@ -76,29 +74,27 @@ function AppRoutes() {
           }
         />
 
-
+        {/* Settings */}
         <Route
-  path="/settings"
-  element={
-    <ProtectedRoute allowedRoles={["admin"]}>
-      <Settings />
-    </ProtectedRoute>
-  }
-/>
+          path="/settings"
+          element={
+            <ProtectedRoute
+              allowedRoles={["admin"]}
+            >
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
 
-
+        {/* Not Found */}
         <Route
           path="*"
           element={<NotFound />}
         />
 
-
       </Routes>
-
     </BrowserRouter>
-
   );
 }
-
 
 export default AppRoutes;

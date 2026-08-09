@@ -4,21 +4,31 @@ import {
   CardContent,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type TeamMemberCardProps = {
   name: string;
   role: string;
   email: string;
+  onDelete: () => void;
 };
 
 function TeamMemberCard({
   name,
   role,
   email,
+  onDelete,
 }: TeamMemberCardProps) {
   return (
-    <Card sx={{ borderRadius: 3 }}>
+    <Card
+      sx={{
+        borderRadius: 3,
+        height: "100%",
+      }}
+    >
       <CardContent>
         <Box
           sx={{
@@ -27,12 +37,20 @@ function TeamMemberCard({
             gap: 2,
           }}
         >
-          <Avatar>
+          <Avatar
+            sx={{
+              width: 50,
+              height: 50,
+            }}
+          >
             {name.charAt(0)}
           </Avatar>
 
-          <Box>
-            <Typography variant="h6">
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+            >
               {name}
             </Typography>
 
@@ -44,6 +62,14 @@ function TeamMemberCard({
               {email}
             </Typography>
           </Box>
+
+          <IconButton
+            color="error"
+            onClick={onDelete}
+            title="Remove member"
+          >
+            <DeleteIcon />
+          </IconButton>
         </Box>
       </CardContent>
     </Card>

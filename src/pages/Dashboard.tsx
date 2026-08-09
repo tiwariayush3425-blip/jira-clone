@@ -13,17 +13,39 @@ import TaskStatusChart from "../components/TaskStatusChart";
 import { tasks as initialTasks } from "../data/tasks";
 import type { Task } from "../types/task";
 
+import TaskDetailsDialog from "../components/TaskDetailsDialog";
+
 function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>(() => {
+  try {
     const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : initialTasks;
-  });
+
+    if (!savedTasks) {
+      return initialTasks;
+    }
+
+    const parsedTasks = JSON.parse(savedTasks);
+
+    return Array.isArray(parsedTasks)
+      ? parsedTasks
+      : initialTasks;
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+
+    localStorage.removeItem("tasks");
+
+    return initialTasks;
+  }
+});
 
   const [searchTerm, setSearchTerm] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("All");
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [open, setOpen] = useState(false);
+
+  const [detailsOpen, setDetailsOpen] = useState(false);
+const [detailsTask, setDetailsTask] = useState<Task | null>(null);
 
   const addTask = (newTask: Task) => {
     setTasks((prev) => [...prev, newTask]);
@@ -84,6 +106,15 @@ function Dashboard() {
       setOpen(true);
     }
   };
+
+  const handleView = (id: number) => {
+  const task = tasks.find((task) => task.id === id);
+
+  if (task) {
+    setDetailsTask(task);
+    setDetailsOpen(true);
+  }
+};
 
   const updateTask = (updatedTask: Task) => {
     setTasks((prev) =>
@@ -246,6 +277,7 @@ function Dashboard() {
           deleteTask={deleteTask}
           editTask={handleEdit}
           addComment={addComment}
+           onView={handleView}
           />
 
           <BoardColumn
@@ -255,6 +287,7 @@ function Dashboard() {
             deleteTask={deleteTask}
             editTask={handleEdit}
             addComment={addComment}
+             onView={handleView}
           />
 
           <BoardColumn
@@ -264,6 +297,7 @@ function Dashboard() {
             deleteTask={deleteTask}
             editTask={handleEdit}
             addComment={addComment}
+             onView={handleView}
           />
         </Box>
 
@@ -280,6 +314,17 @@ function Dashboard() {
           <TaskStatusChart data={chartData} />
         </Box>
       </DragDropContext>
+      <TaskDetailsDialog
+  open={detailsOpen}
+  task={detailsTask}
+  onClose={() => {
+    setDetailsOpen(false);
+    setDetailsTask(null);
+  }}
+  onEdit={handleEdit}
+  onDelete={deleteTask}
+  onAddComment={addComment}
+/>
     </DashboardLayout>
   );
 }

@@ -33,7 +33,7 @@ function Login() {
         id: 1,
         name: "Ayush",
         email: "ayush@gmail.com",
-        role:UserRole;
+        role: role as UserRole,
       },
       "demo-token"
     );

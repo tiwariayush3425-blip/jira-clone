@@ -7,13 +7,17 @@ import {
   Avatar,
   AvatarGroup,
   Box,
+  IconButton,
 } from "@mui/material";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type ProjectCardProps = {
   title: string;
   description: string;
   progress: number;
   status: string;
+  onDelete: () => void;
 };
 
 function ProjectCard({
@@ -21,13 +25,40 @@ function ProjectCard({
   description,
   progress,
   status,
+  onDelete,
 }: ProjectCardProps) {
   return (
-    <Card sx={{ borderRadius: 3 }}>
+    <Card
+      sx={{
+        borderRadius: 3,
+        height: "100%",
+      }}
+    >
       <CardContent>
-        <Typography variant="h6" fontWeight="bold">
-          {title}
-        </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+          >
+            {title}
+          </Typography>
+
+          <IconButton
+            color="error"
+            size="small"
+            onClick={onDelete}
+            title="Delete project"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
 
         <Typography
           variant="body2"
@@ -67,10 +98,17 @@ function ProjectCard({
 
           <Chip
             label={status}
-            color="primary"
+            color={
+              status === "Completed"
+                ? "success"
+                : status === "In Progress"
+                ? "primary"
+                : "warning"
+            }
             size="small"
           />
         </Box>
+
       </CardContent>
     </Card>
   );

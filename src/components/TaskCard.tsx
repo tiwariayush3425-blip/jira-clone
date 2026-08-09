@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -7,12 +6,28 @@ import {
   Avatar,
   Box,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Draggable } from "@hello-pangea/dnd";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
+import { Draggable } from "@hello-pangea/dnd";
+import { useState } from "react";
+
+type Comment = {
+  id: number;
+  text: string;
+  author: string;
+  createdAt: string;
+};
 
 type TaskCardProps = {
   id: number;
@@ -21,15 +36,12 @@ type TaskCardProps = {
   description: string;
   priority: string;
   assignee: string;
-  comments?: {
-    id: number;
-    text: string;
-    author: string;
-    createdAt: string;
-  }[];
+  comments?: Comment[];
 
   deleteTask: (id: number) => void;
   editTask: (id: number) => void;
+  addComment: (taskId: number, comment: string) => void;
+  onView: (id: number) => void;
 };
 
 function TaskCard({
@@ -42,94 +54,216 @@ function TaskCard({
   comments = [],
   deleteTask,
   editTask,
+  addComment,
+  onView,
 }: TaskCardProps) {
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [commentText, setCommentText] = useState("");
+
+  const handleAddComment = () => {
+    if (!commentText.trim()) return;
+
+    addComment(id, commentText.trim());
+
+    setCommentText("");
+    setCommentOpen(false);
+  };
+
   return (
-  <Draggable
-    draggableId={String(id)}
-    index={index}
-  >
+    <Draggable
+      draggableId={String(id)}
+      index={index}
+    >
+      {(provided) => (
+        <>
+          <Card
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            sx={{
+              mb: 2,
+              borderRadius: 3,
+              boxShadow: 2,
+              transition: "0.3s",
 
-    {(provided) => (
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: 6,
+              },
+            }}
+          >
+            <CardContent>
 
-      <Card
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
+              {/* Drag Handle */}
+              <Box
+                {...provided.dragHandleProps}
+                sx={{
+                  cursor: "grab",
+                  mb: 1,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {title}
+                </Typography>
+              </Box>
 
-        sx={{
-          mb: 2,
-          borderRadius: 3,
-          boxShadow: 2,
-          transition: "0.3s",
-          cursor: "grab",
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  my: 1,
+                  minHeight: 45,
+                }}
+              >
+                {description}
+              </Typography>
 
-          "&:hover": {
-            transform: "translateY(-4px)",
-            boxShadow: 6,
-          },
-        }}
-      >
-      <CardContent>
-        
+              <Chip
+                label={priority}
+                size="small"
+                color={
+                  priority === "High"
+                    ? "error"
+                    : priority === "Medium"
+                    ? "warning"
+                    : "success"
+                }
+              />
 
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ my: 1, minHeight:45, }}
-        >
-          {title}
-          {description}
-        </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mt: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  >
+                    {String(assignee).charAt(0)}
+                  </Avatar>
 
-        <Chip
-  label={priority}
-  size="small"
-  color={
-    priority === "High"
-      ? "error"
-      : priority === "Medium"
-      ? "warning"
-      : "success"
-  }
-/>
+                  <Typography variant="body2">
+                    {assignee}
+                  </Typography>
+                </Box>
 
-       <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mt: 2,
-  }}
->
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-    <Avatar sx={{ width: 30, height: 30 }}>
-      {String(assignee).charAt(0)}
-    </Avatar>
+                {/* Action Buttons */}
+                <Box>
+                  <IconButton
+                    size="small"
+                    onClick={() => setCommentOpen(true)}
+                    title="Add comment"
+                  >
+                    <ChatBubbleOutlineIcon />
+                  </IconButton>
 
-    <Typography variant="body2">
-      {assignee}
-    </Typography>
-  </Box>
-  <IconButton
-  color="primary"
-  onClick={() => editTask(id)}
->
-  <EditIcon />
-</IconButton>
-  <IconButton
-    color="error"
-    onClick={() => deleteTask(id)}
-  >
-    <DeleteIcon />
-  </IconButton>
-</Box>
-      </CardContent>
-        </Card>
+                  <IconButton
+                    size="small"
+                    onClick={() => onView(id)}
+                    title="View task"
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
 
-    )}
+                  <IconButton
+                    size="small"
+                    onClick={() => editTask(id)}
+                    title="Edit task"
+                  >
+                    <EditIcon />
+                  </IconButton>
 
-  </Draggable>
-);
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => deleteTask(id)}
+                    title="Delete task"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+
+              {comments.length > 0 && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    display: "block",
+                    mt: 1,
+                  }}
+                >
+                  {comments.length} comment
+                  {comments.length > 1 ? "s" : ""}
+                </Typography>
+              )}
+
+            </CardContent>
+          </Card>
+
+          {/* Comment Dialog */}
+          <Dialog
+            open={commentOpen}
+            onClose={() => setCommentOpen(false)}
+            fullWidth
+            maxWidth="sm"
+          >
+            <DialogTitle>
+              Add Comment
+            </DialogTitle>
+
+            <DialogContent>
+              <TextField
+                autoFocus
+                fullWidth
+                multiline
+                rows={4}
+                margin="dense"
+                label="Your comment"
+                value={commentText}
+                onChange={(e) =>
+                  setCommentText(e.target.value)
+                }
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setCommentText("");
+                  setCommentOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={handleAddComment}
+                disabled={!commentText.trim()}
+              >
+                Add Comment
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
+    </Draggable>
+  );
 }
 
 export default TaskCard;
