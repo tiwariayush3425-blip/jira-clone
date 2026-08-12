@@ -15,7 +15,7 @@ import Maintenance from "../pages/Maintenance";
 
 function AppRoutes() {
   return (
-    <BrowserRouter basename="/jira-clone">
+   <BrowserRouter basename="/jira-clone/">
       <Routes>
         {/* Login */}
         <Route path="/login" element={<Login />} />
