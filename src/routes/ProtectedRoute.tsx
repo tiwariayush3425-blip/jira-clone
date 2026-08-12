@@ -21,13 +21,13 @@ function ProtectedRoute({
 console.log("Allowed Roles:", allowedRoles);
 
   // Role check
-  if (
-    allowedRoles &&
-    user &&
-    !allowedRoles.includes(user.role)
-  ) {
-    return <Navigate to="/dashboard" replace />;
-  }
+ if (
+  allowedRoles &&
+  user &&
+  !allowedRoles.includes(user.role)
+) {
+  return <Navigate to="/unauthorized" replace />;
+}
 
   return <>{children}</>;
 }

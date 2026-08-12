@@ -7,6 +7,7 @@ import Team from "../pages/Team";
 import Projects from "../pages/Projects";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/auth/Login";
+import Unauthorized from "../pages/Unauthorized";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -14,12 +15,8 @@ function AppRoutes() {
   return (
     <BrowserRouter basename="/jira-clone">
       <Routes>
-
         {/* Login */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
         {/* Dashboard */}
         <Route
@@ -44,9 +41,7 @@ function AppRoutes() {
         <Route
           path="/projects"
           element={
-            <ProtectedRoute
-              allowedRoles={["admin", "manager"]}
-            >
+            <ProtectedRoute allowedRoles={["admin", "manager"]}>
               <Projects />
             </ProtectedRoute>
           }
@@ -56,9 +51,7 @@ function AppRoutes() {
         <Route
           path="/team"
           element={
-            <ProtectedRoute
-              allowedRoles={["admin", "manager"]}
-            >
+            <ProtectedRoute allowedRoles={["admin", "manager"]}>
               <Team />
             </ProtectedRoute>
           }
@@ -78,20 +71,16 @@ function AppRoutes() {
         <Route
           path="/settings"
           element={
-            <ProtectedRoute
-              allowedRoles={["admin"]}
-            >
+            <ProtectedRoute allowedRoles={["admin"]}>
               <Settings />
             </ProtectedRoute>
           }
         />
+        {/*Unauthorized */}
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Not Found */}
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
-
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
