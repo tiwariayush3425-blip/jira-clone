@@ -10,6 +10,8 @@ import Login from "../pages/auth/Login";
 import Unauthorized from "../pages/Unauthorized";
 
 import ProtectedRoute from "./ProtectedRoute";
+import ServerError from "../pages/ServerError";
+import Maintenance from "../pages/Maintenance";
 
 function AppRoutes() {
   return (
@@ -78,6 +80,12 @@ function AppRoutes() {
         />
         {/*Unauthorized */}
         <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* Server Error */}
+        <Route path="/500" element={<ServerError />} />
+
+        {/* Maintenance */}
+        <Route path="/maintenance" element={<Maintenance />} />
 
         {/* Not Found */}
         <Route path="*" element={<NotFound />} />
