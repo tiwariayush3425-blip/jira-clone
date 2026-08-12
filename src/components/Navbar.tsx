@@ -16,15 +16,34 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-const notifications = [
-  "Task 'UI Design' assigned to you",
-  "Project deadline is tomorrow",
-  "Task moved to Done",
-];
+type Notification = {
+  id: number;
+  message: string;
+  read: boolean;
+};
+
+const [notifications, setNotifications] = useState<Notification[]>([
+  {
+    id: 1,
+    message: "Task 'UI Design' assigned to you",
+    read: false,
+  },
+  {
+    id: 2,
+    message: "Project deadline is tomorrow",
+    read: false,
+  },
+  {
+    id: 3,
+    message: "Task moved to Done",
+    read: true,
+  },
+]);
 
 const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
   setAnchorEl(event.currentTarget);
@@ -32,6 +51,34 @@ const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
 
 const handleClose = () => {
   setAnchorEl(null);
+};
+ const unreadCount = notifications.filter(
+  (notification) => !notification.read
+).length;
+
+const markAsRead = (id: number) => {
+  setNotifications((prev) =>
+    prev.map((notification) =>
+      notification.id === id
+        ? { ...notification, read: true }
+        : notification
+    )
+  );
+};
+
+const markAllAsRead = () => {
+  setNotifications((prev) =>
+    prev.map((notification) => ({
+      ...notification,
+      read: true,
+    }))
+  );
+};
+
+const deleteNotification = (id: number) => {
+  setNotifications((prev) =>
+    prev.filter((notification) => notification.id !== id)
+  );
 };
   return (
     <AppBar
@@ -96,9 +143,9 @@ const handleClose = () => {
     onClick={handleOpen}
   >
     <Badge
-      badgeContent={notifications.length}
-      color="error"
-    >
+  badgeContent={unreadCount}
+  color="error"
+>
       <NotificationsIcon />
     </Badge>
   </IconButton>
@@ -108,14 +155,67 @@ const handleClose = () => {
     open={Boolean(anchorEl)}
     onClose={handleClose}
   >
-    {notifications.map((notification, index) => (
-      <MenuItem
-        key={index}
-        onClick={handleClose}
+    
+    <Box
+  sx={{
+    px: 2,
+    py: 1,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
+  <Typography fontWeight="bold">
+    Notifications
+  </Typography>
+
+  <MenuItem
+    onClick={markAllAsRead}
+    disabled={unreadCount === 0}
+    sx={{ fontSize: "0.8rem" }}
+  >
+    Mark all read
+  </MenuItem>
+</Box>
+
+{notifications.length === 0 ? (
+  <MenuItem disabled>
+    <ListItemText primary="No notifications" />
+  </MenuItem>
+) : (
+  notifications.map((notification) => (
+    <MenuItem
+      key={notification.id}
+      onClick={() => {
+        markAsRead(notification.id);
+        handleClose();
+      }}
+      sx={{
+        backgroundColor: notification.read
+          ? "transparent"
+          : "action.hover",
+      }}
+    >
+      <ListItemText
+        primary={notification.message}
+        secondary={notification.read ? "Read" : "Unread"}
+        primaryTypographyProps={{
+          fontWeight: notification.read ? "normal" : "bold",
+        }}
+      />
+
+      <IconButton
+        size="small"
+        onClick={(event) => {
+          event.stopPropagation();
+          deleteNotification(notification.id);
+        }}
       >
-        <ListItemText primary={notification} />
-      </MenuItem>
-    ))}
+        <DeleteOutlineIcon fontSize="small" />
+      </IconButton>
+    </MenuItem>
+  ))
+)}
   </Menu>
 </>
 
