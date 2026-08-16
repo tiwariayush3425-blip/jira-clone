@@ -2,6 +2,7 @@ import { Component } from "react";
 import type { ErrorInfo, ReactNode } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import HomeIcon from "@mui/icons-material/Home";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -34,9 +35,11 @@ class ErrorBoundary extends Component<
   }
 
   handleRetry = () => {
-    this.setState({
-      hasError: false,
-    });
+    window.location.reload();
+  };
+
+  handleGoHome = () => {
+    window.location.href = "/jira-clone/";
   };
 
   render() {
@@ -56,7 +59,7 @@ class ErrorBoundary extends Component<
             elevation={3}
             sx={{
               p: 5,
-              maxWidth: 500,
+              maxWidth: 520,
               width: "100%",
               textAlign: "center",
               borderRadius: 3,
@@ -79,17 +82,35 @@ class ErrorBoundary extends Component<
 
             <Typography
               color="text.secondary"
-              sx={{ mb: 3 }}
+              sx={{ mb: 4 }}
             >
-              An unexpected error occurred. Please try again.
+              An unexpected error occurred. Please try again or return to
+              the dashboard.
             </Typography>
 
-            <Button
-              variant="contained"
-              onClick={this.handleRetry}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 2,
+                flexWrap: "wrap",
+              }}
             >
-              Try Again
-            </Button>
+              <Button
+                variant="contained"
+                onClick={this.handleRetry}
+              >
+                Try Again
+              </Button>
+
+              <Button
+                variant="outlined"
+                startIcon={<HomeIcon />}
+                onClick={this.handleGoHome}
+              >
+                Go to Dashboard
+              </Button>
+            </Box>
           </Paper>
         </Box>
       );

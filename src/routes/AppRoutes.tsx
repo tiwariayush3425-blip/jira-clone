@@ -1,96 +1,101 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import NotFound from "../pages/NotFound";
-import Settings from "../pages/Settings";
-import Profile from "../pages/Profile";
-import Team from "../pages/Team";
-import Projects from "../pages/Projects";
-import Dashboard from "../pages/Dashboard";
-import Login from "../pages/auth/Login";
-import Unauthorized from "../pages/Unauthorized";
+import { lazy, Suspense } from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
-import ServerError from "../pages/ServerError";
-import Maintenance from "../pages/Maintenance";
+
+// Lazy-loaded pages
+const NotFound = lazy(() => import("../pages/NotFound"));
+const Settings = lazy(() => import("../pages/Settings"));
+const Profile = lazy(() => import("../pages/Profile"));
+const Team = lazy(() => import("../pages/Team"));
+const Projects = lazy(() => import("../pages/Projects"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Unauthorized = lazy(() => import("../pages/Unauthorized"));
+const ServerError = lazy(() => import("../pages/ServerError"));
+const Maintenance = lazy(() => import("../pages/Maintenance"));
 
 function AppRoutes() {
   return (
-   <BrowserRouter basename="/jira-clone/">
-      <Routes>
-        {/* Login */}
-        <Route path="/login" element={<Login />} />
+    <HashRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          {/* Login */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Dashboard */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          {/* Dashboard */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Projects */}
-        <Route
-          path="/projects"
-          element={
-            <ProtectedRoute allowedRoles={["admin", "manager"]}>
-              <Projects />
-            </ProtectedRoute>
-          }
-        />
+          {/* Projects */}
+          <Route
+            path="/projects"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "manager"]}>
+                <Projects />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Team */}
-        <Route
-          path="/team"
-          element={
-            <ProtectedRoute allowedRoles={["admin", "manager"]}>
-              <Team />
-            </ProtectedRoute>
-          }
-        />
+          {/* Team */}
+          <Route
+            path="/team"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "manager"]}>
+                <Team />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Profile */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
+          {/* Profile */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Settings */}
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
-        {/*Unauthorized */}
-        <Route path="/unauthorized" element={<Unauthorized />} />
+          {/* Settings */}
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Server Error */}
-        <Route path="/500" element={<ServerError />} />
+          {/* Unauthorized */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Maintenance */}
-        <Route path="/maintenance" element={<Maintenance />} />
+          {/* Server Error */}
+          <Route path="/500" element={<ServerError />} />
 
-        {/* Not Found */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Maintenance */}
+          <Route path="/maintenance" element={<Maintenance />} />
+
+          {/* Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </HashRouter>
   );
 }
 

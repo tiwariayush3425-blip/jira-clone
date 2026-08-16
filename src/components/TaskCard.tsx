@@ -20,7 +20,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { Draggable } from "@hello-pangea/dnd";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 type Comment = {
   id: number;
@@ -61,19 +61,17 @@ function TaskCard({
   const [commentText, setCommentText] = useState("");
 
   const handleAddComment = () => {
-    if (!commentText.trim()) return;
+    const comment = commentText.trim();
 
-    addComment(id, commentText.trim());
+    if (!comment) return;
 
+    addComment(id, comment);
     setCommentText("");
     setCommentOpen(false);
   };
 
   return (
-    <Draggable
-      draggableId={String(id)}
-      index={index}
-    >
+    <Draggable draggableId={String(id)} index={index}>
       {(provided) => (
         <>
           <Card
@@ -92,7 +90,6 @@ function TaskCard({
             }}
           >
             <CardContent>
-
               {/* Drag Handle */}
               <Box
                 {...provided.dragHandleProps}
@@ -101,10 +98,7 @@ function TaskCard({
                   mb: 1,
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: "bold" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                   {title}
                 </Typography>
               </Box>
@@ -127,8 +121,8 @@ function TaskCard({
                   priority === "High"
                     ? "error"
                     : priority === "Medium"
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
               />
 
@@ -156,9 +150,7 @@ function TaskCard({
                     {String(assignee).charAt(0)}
                   </Avatar>
 
-                  <Typography variant="body2">
-                    {assignee}
-                  </Typography>
+                  <Typography variant="body2">{assignee}</Typography>
                 </Box>
 
                 {/* Action Buttons */}
@@ -211,34 +203,34 @@ function TaskCard({
                   {comments.length > 1 ? "s" : ""}
                 </Typography>
               )}
-
             </CardContent>
           </Card>
 
           {/* Comment Dialog */}
           <Dialog
             open={commentOpen}
-            onClose={() => setCommentOpen(false)}
+            onClose={() => {
+              setCommentOpen(false);
+              setCommentText("");
+            }}
             fullWidth
             maxWidth="sm"
           >
-            <DialogTitle>
-              Add Comment
-            </DialogTitle>
-
+            <DialogTitle>Add Comment</DialogTitle>
+            
             <DialogContent>
               <TextField
-                autoFocus
-                fullWidth
-                multiline
-                rows={4}
-                margin="dense"
-                label="Your comment"
-                value={commentText}
-                onChange={(e) =>
-                  setCommentText(e.target.value)
-                }
-              />
+              autoFocus
+              fullWidth
+              multiline
+              rows={4}
+              margin="dense"
+              label="Your comment"
+              value={commentText}
+              onChange={(event) => {
+                setCommentText(event.target.value);
+              }}
+            />
             </DialogContent>
 
             <DialogActions>
@@ -254,7 +246,7 @@ function TaskCard({
               <Button
                 variant="contained"
                 onClick={handleAddComment}
-                disabled={!commentText.trim()}
+                disabled={commentText.trim().length === 0}
               >
                 Add Comment
               </Button>
@@ -266,4 +258,4 @@ function TaskCard({
   );
 }
 
-export default TaskCard;
+export default memo(TaskCard);

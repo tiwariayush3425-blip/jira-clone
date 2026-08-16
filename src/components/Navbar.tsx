@@ -17,9 +17,20 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useAuthStore } from "../store/authStore";
+type NavbarProps = {
+  onMenuClick?: () => void;
+};
 
-function Navbar() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+function Navbar({ onMenuClick }: NavbarProps) {
+  const [anchorEl, setAnchorEl] =
+    useState<null | HTMLElement>(null);
+
+  const [profileAnchorEl, setProfileAnchorEl] =
+    useState<null | HTMLElement>(null);
+
+  const { logout } = useAuthStore();
 
 type Notification = {
   id: number;
@@ -93,6 +104,18 @@ const deleteNotification = (id: number) => {
     minHeight: 64,
   }}
 >
+  <IconButton
+  color="inherit"
+  onClick={onMenuClick}
+  sx={{
+    display: {
+      xs: "inline-flex",
+      md: "none",
+    },
+  }}
+>
+  <MenuIcon />
+</IconButton>
         <Typography
   variant="h5"
   sx={{
@@ -219,26 +242,49 @@ const deleteNotification = (id: number) => {
   </Menu>
 </>
 
-        <Avatar
+        <IconButton
+  onClick={(event) =>
+    setProfileAnchorEl(event.currentTarget)
+  }
   sx={{
-         ml: {
-         xs: 1,
-         sm: 2,
-         },
-         bgcolor: "#ff9800",
-         fontWeight: "bold",
-         width: {
-         xs: 35,
-         md: 40,
-         },
-         height: {
-         xs: 35,
-         md: 40,
-         },
-         }}
-         >
-         A
-         </Avatar>
+    ml: {
+      xs: 1,
+      sm: 2,
+    },
+    p: 0,
+  }}
+>
+  <Avatar
+    sx={{
+      bgcolor: "#ff9800",
+      fontWeight: "bold",
+      width: {
+        xs: 35,
+        md: 40,
+      },
+      height: {
+        xs: 35,
+        md: 40,
+      },
+    }}
+  >
+    A
+  </Avatar>
+</IconButton>
+<Menu
+  anchorEl={profileAnchorEl}
+  open={Boolean(profileAnchorEl)}
+  onClose={() => setProfileAnchorEl(null)}
+>
+  <MenuItem
+    onClick={() => {
+      setProfileAnchorEl(null);
+      logout();
+    }}
+  >
+    Logout
+  </MenuItem>
+</Menu>
       </Toolbar>
     </AppBar>
   );

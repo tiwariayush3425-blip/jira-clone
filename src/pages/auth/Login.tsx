@@ -2,40 +2,40 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  MenuItem,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
-
+import { loginUser } from "../../services/authService";
 function Login() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"admin" | "manager" | "member">("member");
+ 
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert("Please enter Email and Password");
-      return;
-    }
+  const handleLogin = async () => {
+  if (!email.trim() || !password.trim()) {
+    alert("Please enter Email and Password");
+    return;
+  }
 
-    login(
-      {
-        id: 1,
-        name: "Ayush",
-        email,
-        role,
-      },
-      "demo-token"
+  try {
+    const response = await loginUser(
+      email.trim(),
+      password
     );
 
+    login(response.user, response.token);
+
     navigate("/dashboard");
-  };
+  } catch (error) {
+    alert("Invalid email or password");
+  }
+};
 
   return (
     <Box
@@ -76,20 +76,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <TextField
-          select
-          label="Role"
-          fullWidth
-          margin="normal"
-          value={role}
-          onChange={(e) =>
-            setRole(e.target.value as "admin" | "manager" | "member")
-          }
-        >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="manager">Project Manager</MenuItem>
-          <MenuItem value="member">Team Member</MenuItem>
-        </TextField>
+        
 
         <Button
           variant="contained"

@@ -3,6 +3,7 @@ import { Droppable } from "@hello-pangea/dnd";
 
 import TaskCard from "./TaskCard";
 import type { Task } from "../types/task";
+import { memo } from "react";
 
 
 type BoardColumnProps = {
@@ -122,4 +123,4 @@ function BoardColumn({
 }
 
 
-export default BoardColumn;
+export default memo(BoardColumn);

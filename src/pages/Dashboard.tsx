@@ -2,100 +2,87 @@ import { DragDropContext } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import toast from "react-hot-toast";
 import { Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 import Header from "../components/Header";
 import BoardColumn from "../components/BoardColumn";
 import AnalyticsCard from "../components/AnalyticsCard";
-import TaskStatusChart from "../components/TaskStatusChart";
-
-import { tasks as initialTasks } from "../data/tasks";
-import type { Task } from "../types/task";
-
 import TaskDetailsDialog from "../components/TaskDetailsDialog";
 
+
+import type { Task } from "../types/task";
+import { useTasks } from "../hooks/useTasks";
+
 function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-  try {
-    const savedTasks = localStorage.getItem("tasks");
-
-    if (!savedTasks) {
-      return initialTasks;
-    }
-
-    const parsedTasks = JSON.parse(savedTasks);
-
-    return Array.isArray(parsedTasks)
-      ? parsedTasks
-      : initialTasks;
-  } catch (error) {
-    console.error("Failed to load tasks:", error);
-
-    localStorage.removeItem("tasks");
-
-    return initialTasks;
-  }
-});
+  const {
+  data: tasks = [],
+  updateTasks,
+  isLoading,
+  isError,
+} = useTasks();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("All");
 
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] =
+    useState<Task | null>(null);
+
   const [open, setOpen] = useState(false);
 
   const [detailsOpen, setDetailsOpen] = useState(false);
-const [detailsTask, setDetailsTask] = useState<Task | null>(null);
 
+  const [detailsTask, setDetailsTask] =
+    useState<Task | null>(null);
+
+  // Add Task
   const addTask = (newTask: Task) => {
-    setTasks((prev) => [...prev, newTask]);
+   updateTasks((prev) => [...prev, newTask]);
+
     toast.success("Task added successfully!");
   };
 
+  // Delete Task
   const deleteTask = (id: number) => {
-    setTasks((prev) =>
-      prev.filter((task) => task.id !== id)
-    );
+    updateTasks((prev) =>
+  prev.filter((task) => task.id !== id)
+);
 
     toast.success("Task deleted successfully!");
   };
 
-
+  // Add Comment
   const addComment = (
-  taskId: number,
-  comment: string
-) => {
-  setTasks((prev) =>
-    prev.map((task) =>
-      task.id === taskId
-        ? {
-            ...task,
-            comments: [
-              ...(task.comments || []),
-              {
-                id: Date.now(),
-                text: comment,
-                author: "Ayush",
-                createdAt: new Date().toLocaleString(),
-              },
-            ],
-          }
-        : task
-    )
-  );
-
-  toast.success("Comment added!");
-};
-
-
-
-  useEffect(() => {
-    localStorage.setItem(
-      "tasks",
-      JSON.stringify(tasks)
+    taskId: number,
+    comment: string
+  ) => {
+    updateTasks((prev) =>
+  prev.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              comments: [
+                ...(task.comments || []),
+                {
+                  id: Date.now(),
+                  text: comment,
+                  author: "Ayush",
+                  createdAt:
+                    new Date().toLocaleString(),
+                },
+              ],
+            }
+          : task
+      )
     );
-  }, [tasks]);
 
+    toast.success("Comment added!");
+  };
+
+  // Save tasks to localStorage
+ 
+
+  // Edit Task
   const handleEdit = (id: number) => {
     const task = tasks.find(
       (task) => task.id === id
@@ -107,18 +94,22 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
     }
   };
 
+  // View Task
   const handleView = (id: number) => {
-  const task = tasks.find((task) => task.id === id);
+    const task = tasks.find(
+      (task) => task.id === id
+    );
 
-  if (task) {
-    setDetailsTask(task);
-    setDetailsOpen(true);
-  }
-};
+    if (task) {
+      setDetailsTask(task);
+      setDetailsOpen(true);
+    }
+  };
 
+  // Update Task
   const updateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((task) =>
+    updateTasks((prev) =>
+  prev.map((task) =>
         task.id === updatedTask.id
           ? updatedTask
           : task
@@ -131,13 +122,14 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
     setSelectedTask(null);
   };
 
+  // Drag & Drop
   const handleDragEnd = (result: DropResult) => {
     const { destination, draggableId } = result;
 
     if (!destination) return;
 
-    setTasks((prev) =>
-      prev.map((task) =>
+    updateTasks((prev) =>
+  prev.map((task) =>
         task.id === Number(draggableId)
           ? {
               ...task,
@@ -151,10 +143,7 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
     toast.success("Task moved successfully!");
   };
 
-  // ===========================
   // Analytics
-  // ===========================
-
   const todoCount = tasks.filter(
     (task) => task.status === "Todo"
   ).length;
@@ -167,25 +156,7 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
     (task) => task.status === "Done"
   ).length;
 
-  const chartData = [
-    {
-      name: "Todo",
-      value: todoCount,
-    },
-    {
-      name: "In Progress",
-      value: progressCount,
-    },
-    {
-      name: "Done",
-      value: doneCount,
-    },
-  ];
-
-  // ===========================
-  // Search + Filter
-  // ===========================
-
+  // Search + Priority Filter
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =
       task.title
@@ -202,9 +173,47 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
     return matchesSearch && matchesPriority;
   });
 
+  if (isLoading) {
   return (
     <DashboardLayout>
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <Box
+        sx={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Loading tasks...
+      </Box>
+    </DashboardLayout>
+  );
+}
+
+if (isError) {
+  return (
+    <DashboardLayout>
+      <Box
+        sx={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          color: "error.main",
+        }}
+      >
+        Failed to load tasks. Please try again.
+      </Box>
+    </DashboardLayout>
+  );
+}
+  return (
+    <DashboardLayout>
+      <DragDropContext
+        onDragEnd={handleDragEnd}
+      >
+        {/* Header */}
         <Header
           addTask={addTask}
           updateTask={updateTask}
@@ -219,14 +228,13 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
         />
 
         {/* Analytics Cards */}
-
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr",
-              sm: "repeat(2,1fr)",
-              lg: "repeat(4,1fr)",
+              sm: "repeat(2, 1fr)",
+              lg: "repeat(4, 1fr)",
             },
             gap: 2,
             p: 2,
@@ -254,7 +262,6 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
         </Box>
 
         {/* Kanban Board */}
-
         <Box
           sx={{
             display: "flex",
@@ -270,61 +277,90 @@ const [detailsTask, setDetailsTask] = useState<Task | null>(null);
             alignItems: "flex-start",
           }}
         >
-          <BoardColumn
-          title="Todo"
-          status="Todo"
-          tasks={filteredTasks}
-          deleteTask={deleteTask}
-          editTask={handleEdit}
-          addComment={addComment}
-           onView={handleView}
-          />
+          {filteredTasks.length === 0 ? (
+            <Box
+              sx={{
+                width: "100%",
+                minHeight: 220,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                py: 6,
+              }}
+            >
+              <Box
+                sx={{
+                  fontSize: "1.2rem",
+                  fontWeight: 600,
+                  mb: 1,
+                }}
+              >
+                {tasks.length === 0
+                  ? "No tasks yet"
+                  : "No tasks found"}
+              </Box>
 
-          <BoardColumn
-            title="In Progress"
-            status="In Progress"
-            tasks={filteredTasks}
-            deleteTask={deleteTask}
-            editTask={handleEdit}
-            addComment={addComment}
-             onView={handleView}
-          />
+              <Box
+                sx={{
+                  color: "text.secondary",
+                  maxWidth: 420,
+                }}
+              >
+                {tasks.length === 0
+                  ? "Create your first task to start managing your project."
+                  : "Try changing your search term or priority filter."}
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <BoardColumn
+                title="Todo"
+                status="Todo"
+                tasks={filteredTasks}
+                deleteTask={deleteTask}
+                editTask={handleEdit}
+                addComment={addComment}
+                onView={handleView}
+              />
 
-          <BoardColumn
-            title="Done"
-            status="Done"
-            tasks={filteredTasks}
-            deleteTask={deleteTask}
-            editTask={handleEdit}
-            addComment={addComment}
-             onView={handleView}
-          />
-        </Box>
+              <BoardColumn
+                title="In Progress"
+                status="In Progress"
+                tasks={filteredTasks}
+                deleteTask={deleteTask}
+                editTask={handleEdit}
+                addComment={addComment}
+                onView={handleView}
+              />
 
-        {/* Chart */}
-
-        <Box
-          sx={{
-            p: 2,
-            bgcolor: "#fff",
-            borderRadius: 2,
-            m: 2,
-          }}
-        >
-          <TaskStatusChart data={chartData} />
+              <BoardColumn
+                title="Done"
+                status="Done"
+                tasks={filteredTasks}
+                deleteTask={deleteTask}
+                editTask={handleEdit}
+                addComment={addComment}
+                onView={handleView}
+              />
+            </>
+          )}
         </Box>
       </DragDropContext>
+
+      {/* Task Details */}
       <TaskDetailsDialog
-  open={detailsOpen}
-  task={detailsTask}
-  onClose={() => {
-    setDetailsOpen(false);
-    setDetailsTask(null);
-  }}
-  onEdit={handleEdit}
-  onDelete={deleteTask}
-  onAddComment={addComment}
-/>
+        open={detailsOpen}
+        task={detailsTask}
+        onClose={() => {
+          setDetailsOpen(false);
+          setDetailsTask(null);
+        }}
+        onEdit={handleEdit}
+        onDelete={deleteTask}
+        onAddComment={addComment}
+      />
     </DashboardLayout>
   );
 }

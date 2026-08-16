@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
-interface ProtectedRouteProps {
+type ProtectedRouteProps = {
   children: React.ReactNode;
-  allowedRoles?: ("admin" | "manager" | "member")[];
-}
+  allowedRoles?: string[];
+};
 
 function ProtectedRoute({
   children,
@@ -12,22 +12,17 @@ function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { isAuthenticated, user } = useAuthStore();
 
-  // Login nahi hai
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  console.log("User Role:", user?.role);
-console.log("Allowed Roles:", allowedRoles);
-
-  // Role check
- if (
-  allowedRoles &&
-  user &&
-  !allowedRoles.includes(user.role)
-) {
-  return <Navigate to="/unauthorized" replace />;
-}
+  if (
+    allowedRoles &&
+    user &&
+    !allowedRoles.includes(user.role)
+  ) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
   return <>{children}</>;
 }
