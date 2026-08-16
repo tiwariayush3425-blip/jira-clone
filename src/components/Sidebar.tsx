@@ -48,10 +48,7 @@ type SidebarProps = {
   onClose?: () => void;
 };
 
-function Sidebar({
-  mobileOpen = false,
-  onClose = () => {},
-}: SidebarProps) {
+function Sidebar({ mobileOpen = false, onClose = () => {} }: SidebarProps) {
   const location = useLocation();
 
   const sidebarContent = (
@@ -59,8 +56,8 @@ function Sidebar({
       sx={{
         width: 220,
         minHeight: "100vh",
-        bgcolor: "#e3f2fd",
-        borderRight: "2px solid #1976d2",
+        bgcolor: "#2c3e6b",
+        borderRight: "1px solid #617897",
       }}
     >
       <List sx={{ pt: 2 }}>
@@ -77,7 +74,7 @@ function Sidebar({
               borderRadius: 2,
 
               "&.Mui-selected": {
-                bgcolor: "#1976d2",
+                bgcolor: "#344b6d",
                 color: "#fff",
               },
 
@@ -86,17 +83,14 @@ function Sidebar({
               },
 
               "&:hover": {
-                bgcolor: "#bbdefb",
+                bgcolor: "#1e293b",
               },
             }}
           >
             <ListItemIcon
               sx={{
                 minWidth: 42,
-                color:
-                  location.pathname === item.path
-                    ? "#fff"
-                    : "inherit",
+                color: location.pathname === item.path ? "#fff" : "#cbd5e1",
               }}
             >
               {item.icon}

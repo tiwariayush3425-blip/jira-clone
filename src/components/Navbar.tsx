@@ -95,7 +95,7 @@ const deleteNotification = (id: number) => {
     <AppBar
       position="sticky"
       sx={{
-        bgcolor: "#1565c0",
+        bgcolor: "#2c3e6b",
       }}
     >
       <Toolbar

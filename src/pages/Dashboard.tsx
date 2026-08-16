@@ -208,8 +208,15 @@ if (isError) {
     </DashboardLayout>
   );
 }
-  return (
-    <DashboardLayout>
+return (
+  <DashboardLayout>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#0f172a",
+        color: "#f8fafc",
+      }}
+    >
       <DragDropContext
         onDragEnd={handleDragEnd}
       >
@@ -229,17 +236,20 @@ if (isError) {
 
         {/* Analytics Cards */}
         <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              lg: "repeat(4, 1fr)",
-            },
-            gap: 2,
-            p: 2,
-          }}
-        >
+  sx={{
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",
+      sm: "repeat(2, 1fr)",
+      lg: "repeat(4, 1fr)",
+    },
+    gap: 2,
+    p: {
+      xs: 2,
+      md: 3,
+    },
+  }}
+>
           <AnalyticsCard
             title="Total Tasks"
             value={tasks.length}
@@ -275,6 +285,14 @@ if (isError) {
             },
             overflowX: "auto",
             alignItems: "flex-start",
+            "&::-webkit-scrollbar": {
+      height: 8,
+    },
+
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#2c3e6b",
+      borderRadius: 4,
+    },
           }}
         >
           {filteredTasks.length === 0 ? (
@@ -361,6 +379,7 @@ if (isError) {
         onDelete={deleteTask}
         onAddComment={addComment}
       />
+      </Box>
     </DashboardLayout>
   );
 }

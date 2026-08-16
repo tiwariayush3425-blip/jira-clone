@@ -2,15 +2,12 @@
 
 A Jira-inspired project management application built using React, TypeScript, Vite, and Material UI. The project demonstrates component-based architecture, responsive UI design, state management, and modern frontend development practices.
 
-## 🚀 Live Demo
+Live Demo:
 
-Add your GitHub Pages URL here:
-
-```
 https://tiwariayush3425-blip.github.io/jira-clone/
-```
 
-## 📌 Features
+
+ Features:
 
 * Kanban board with Todo, In Progress, and Done columns
 * Drag and Drop task management
@@ -26,25 +23,24 @@ https://tiwariayush3425-blip.github.io/jira-clone/
 * Protected routes
 * Toast notifications for user actions
 
-## 🛠 Tech Stack
+Tech Stack:-
 
-### Frontend
+Frontend:
 
 * React
 * TypeScript
 * Vite
 * Material UI (MUI)
 
-### Libraries
+Libraries:
 
 * React Router DOM
 * Zustand
 * React Hot Toast
 * @hello-pangea/dnd
 
-## 📂 Project Structure
+Project Structure:
 
-```
 src
 │
 ├── api
@@ -63,9 +59,9 @@ src
 ├── store
 ├── types
 └── main.tsx
-```
 
-## ⚙️ Installation & Setup
+
+Installation & Setup:
 
 Clone the repository:
 
@@ -103,7 +99,7 @@ Deploy to GitHub Pages:
 npm run deploy
 ```
 
-## 🎯 Application Workflow
+Application Workflow:
 
 1. User opens the application
 2. Login page is displayed
@@ -111,28 +107,18 @@ npm run deploy
 4. Dashboard opens with Kanban board
 5. Tasks can be created, updated, deleted, searched, filtered, and moved using drag and drop
 
-## 📸 Screenshots
+Screenshots:
 
-### Dashboard
-![Dashboard](./src/assets/screenshots/dashboard.png)
+Dashboard
+./src/assets/screenshots/dashboard.png
 
-### Add Task Dialog
-![add task](src/assets/screenshots/add-task.png)
+Add Task Dialog
+src/assets/screenshots/add-task.png
 
-### Drag and Drop
-![drag drop](src/assets/screenshots/drag-drop.png)
+Drag and Drop
+src/assets/screenshots/drag-drop.png
 
-## 📈 Learning Outcomes
 
-* React component architecture
-* TypeScript with React
-* Material UI implementation
-* State management
-* Routing
-* Reusable components
-* Frontend project organization
-* Git and GitHub workflow
-
-## 👨‍💻 Author
+Author
 
 Ayush Tiwari
