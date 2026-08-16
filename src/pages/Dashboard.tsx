@@ -213,7 +213,7 @@ return (
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: "#0f172a",
+        bgcolor: "#2c3e6b",
         color: "#f8fafc",
       }}
     >
